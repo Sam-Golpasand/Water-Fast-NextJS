@@ -73,7 +73,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen bg-background text-foreground">
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 lg:px-8">
         <div className="w-full max-w-sm">
-          <h3 className='text-muted-foreground text-sm mb-4'>EN DIGITAL LØSNING TIL DIN KØRESKOLE</h3>
+          <h3 className='text-muted-foreground text-sm mb-4'>DIN DIGITALE ASSISTENT TIL DIN FASTE</h3>
           <h2 className="text-3xl font-bold mb-6 text-left text-foreground">Log ind i din konto<span className='text-green-500'>.</span></h2>
           <h3 className='text-muted-foreground text-sm my-4'>Mangler du en konto? <Link href="/signup" className='text-green-500'>Lav en her</Link></h3>
           <form className="space-y-6" onSubmit={login}>
@@ -87,7 +87,7 @@ export default function LoginPage() {
       </div>
       <div className="hidden lg:block lg:w-1/2 relative">
         <Image
-          src="/road.png"
+          src="/3.jpg"
           alt="Login background"
           layout="fill"
           objectFit="cover"

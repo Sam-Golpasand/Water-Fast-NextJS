@@ -3,7 +3,7 @@ import { exec } from 'child_process'
 import * as XLSX from 'xlsx'
 import path from 'path'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const formData = await req.json()
    
@@ -14,8 +14,7 @@ export async function POST(req: NextRequest) {
     const scriptPath = path.join(process.cwd(), 'python/main.py')
     const trainingDataPath = path.join(process.cwd(), 'python/trainingData.xlsx')
     
-   
-    return new Promise((resolve) => {
+    return new Promise<NextResponse>((resolve) => {
       const pythonInterpreter = path.join(process.cwd(), '/python/.venv/bin/python');
       const pythonProcess = exec(
         `${pythonInterpreter} ${scriptPath} ${trainingDataPath}`,
@@ -42,8 +41,8 @@ export async function POST(req: NextRequest) {
             return
           }
 
+          const trimmedOutput = stdout.trim()
           try {
-            const trimmedOutput = stdout.trim()
             const results = JSON.parse(trimmedOutput)
             resolve(NextResponse.json(results))
             console.log(trimmedOutput)
@@ -76,3 +75,4 @@ async function createExcelBuffer(data: any): Promise<Buffer> {
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
   return XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
 }
+
