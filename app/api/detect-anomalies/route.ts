@@ -14,8 +14,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const scriptPath = path.join(process.cwd(), 'python/main.py')
     const trainingDataPath = path.join(process.cwd(), 'python/trainingData.xlsx')
     
-    return new Promise<NextResponse>((resolve) => {
-      const pythonInterpreter = path.join(process.cwd(), '/python/.venv/bin/python');
+    return new Promise<NextResponse>((resolve, reject) => {
+      const pythonInterpreter = path.join(process.cwd(), '/python/.venv/bin/python')
       const pythonProcess = exec(
         `${pythonInterpreter} ${scriptPath} ${trainingDataPath}`,
         { maxBuffer: 1024 * 1024 * 10 },
@@ -23,22 +23,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           console.log('Raw stdout:', stdout)
           console.log('Raw stderr:', stderr)
 
-          if (error) {
-            console.error(`Execution Error: ${error.message}`)
-            resolve(NextResponse.json({
+          if (error || stderr) {
+            console.error(`Execution Error: ${error ? error.message : stderr}`)
+            return resolve(NextResponse.json({
               error: 'Failed to process data',
-              details: error.message
+              details: error ? error.message : stderr
             }, { status: 500 }))
-            return
-          }
-         
-          if (stderr) {
-            console.error(`Script Error: ${stderr}`)
-            resolve(NextResponse.json({
-              error: 'Script execution error',
-              details: stderr
-            }, { status: 500 }))
-            return
           }
 
           const trimmedOutput = stdout.trim()
@@ -75,4 +65,3 @@ async function createExcelBuffer(data: any): Promise<Buffer> {
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
   return XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
 }
-

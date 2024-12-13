@@ -1,8 +1,8 @@
 import sys
 import json
 import pandas as pd
+import io
 import tempfile
-import numpy as np
 from sklearn.preprocessing import RobustScaler
 from sklearn.ensemble import IsolationForest
 
@@ -90,26 +90,18 @@ class AnomalyDetector:
                 'error': str(e)
             }
 
-import os
-
 def main():
     try:
-        # Get the training data file path from arguments
-        training_data_path = sys.argv[1]
+        # Read input data from stdin
+        excel_data = sys.stdin.buffer.read()
+        input_data = pd.read_excel(io.BytesIO(excel_data))
 
-        # Read training data
+        # Get the training data path from arguments
+        training_data_path = sys.argv[1]
         training_data = pd.read_excel(training_data_path)
 
         # Initialize detector
         detector = AnomalyDetector(training_data)
-
-        # Write stdin data to a temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx") as tmp:
-            tmp.write(sys.stdin.buffer.read())
-            tmp.flush()
-
-            # Read input data from the temporary file
-            input_data = pd.read_excel(tmp.name)
 
         # Detect anomaly for the first row
         if not input_data.empty:
