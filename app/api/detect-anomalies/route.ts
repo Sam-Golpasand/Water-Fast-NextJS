@@ -6,80 +6,66 @@ import path from 'path'
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.json()
-    
+   
     // Create Excel file in memory
     const excelBuffer = await createExcelBuffer(formData)
-    
+   
     // Run Python script
-    const scriptPath = path.join(process.cwd(), 'anomaly_detector.py')
-    const trainingDataPath = path.join(process.cwd(), 'chatgpttrain.xlsx')
+    const scriptPath = path.join(process.cwd(), 'python/main.py')
+    const trainingDataPath = path.join(process.cwd(), 'python/trainingData.xlsx')
     
+   
     return new Promise((resolve) => {
-      const pythonProcess = exec(`python3 ${scriptPath} ${trainingDataPath} -`, (error, stdout, stderr) => {
-        // Log raw output for debugging
-        console.log('Raw stdout:', stdout)
-        console.log('Raw stderr:', stderr)
+      const pythonInterpreter = path.join(process.cwd(), '/python/.venv/bin/python');
+      const pythonProcess = exec(
+        `${pythonInterpreter} ${scriptPath} ${trainingDataPath}`,
+        { maxBuffer: 1024 * 1024 * 10 },
+        (error, stdout, stderr) => {
+          console.log('Raw stdout:', stdout)
+          console.log('Raw stderr:', stderr)
 
-        if (error) {
-          console.error(`Execution Error: ${error.message}`)
-          resolve(NextResponse.json({ 
-            error: 'Failed to process data', 
-            details: error.message 
-          }, { status: 500 }))
-          return
-        }
-        
-        if (stderr) {
-          console.error(`Script Error: ${stderr}`)
-          resolve(NextResponse.json({ 
-            error: 'Script execution error', 
-            details: stderr 
-          }, { status: 500 }))
-          return
-        }
-
-        try {
-          // Trim and parse output, with more robust error handling
-          const trimmedOutput = stdout.trim()
-          let results;
-          
-          try {
-            results = JSON.parse(trimmedOutput)
-          } catch (parseError) {
-            console.error('JSON Parsing Error:', parseError)
-            resolve(NextResponse.json({ 
-              error: 'Failed to parse results', 
-              details: trimmedOutput 
+          if (error) {
+            console.error(`Execution Error: ${error.message}`)
+            resolve(NextResponse.json({
+              error: 'Failed to process data',
+              details: error.message
+            }, { status: 500 }))
+            return
+          }
+         
+          if (stderr) {
+            console.error(`Script Error: ${stderr}`)
+            resolve(NextResponse.json({
+              error: 'Script execution error',
+              details: stderr
             }, { status: 500 }))
             return
           }
 
-          // Check for error in results
-          if (results.error) {
-            resolve(NextResponse.json({ 
-              error: results.error 
-            }, { status: 500 }))
-          } else {
+          try {
+            const trimmedOutput = stdout.trim()
+            const results = JSON.parse(trimmedOutput)
             resolve(NextResponse.json(results))
+            console.log(trimmedOutput)
+          } catch (parseError) {
+            console.error('JSON Parsing Error:', parseError)
+            resolve(NextResponse.json({
+              error: 'Failed to parse results',
+              details: trimmedOutput
+            }, { status: 500 }))
           }
-        } catch (unexpectedError) {
-          console.error('Unexpected Error:', unexpectedError)
-          resolve(NextResponse.json({ 
-            error: 'Unexpected processing error', 
-            details: unexpectedError.message
-          }, { status: 500 }))
         }
-      })
-
+      )
+      
       // Write Excel data to stdin of Python process
-      pythonProcess.stdin.write(excelBuffer)
-      pythonProcess.stdin.end()
+      pythonProcess.stdin?.write(excelBuffer)
+      pythonProcess.stdin?.end()
     })
   } catch (error) {
     console.error('Request Processing Error:', error)
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error.message 
+    return NextResponse.json({
+      error: 'Internal server error',
+      details: (error as Error).message
     }, { status: 500 })
   }
 }
