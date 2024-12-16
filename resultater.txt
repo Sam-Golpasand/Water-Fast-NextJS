@@ -1,0 +1,11 @@
+{"Isolation_Forest_Anomaly": false, 
+"Distance_Based_Anomaly": false, 
+"length_Z_Score": 1.4459618372367622, 
+"weightpre_Z_Score": 0.7900824506436533, 
+"weightpost_Z_Score": 0.6931477006153173, 
+"bmipre_Z_Score": 0.8194140421277604, 
+"bmipost_Z_Score": 0.6925532427892235, 
+"waistpre_Z_Score": 1.2965284667415338, 
+"waistpost_Z_Score": 1.350600607790261, 
+"pulsepre_Z_Score": 0.2398886284872445, 
+"pulsepost_Z_Score": 1.2029665585335023}
