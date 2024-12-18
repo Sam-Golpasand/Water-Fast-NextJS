@@ -9,7 +9,8 @@ export default function Navbar() {
         <span className="text-lg font-semibold text-foreground">Min Faste<span className='text-green-500'>.</span></span>
       </div>
       <div className="ml-16 mx-auto">
-          <Link href="/join" className="text-muted-foreground hover:text-foreground transition duration-400">Join</Link>
+      <Link href="/login" className="text-muted-foreground hover:text-foreground transition duration-400 mr-4">Login</Link>
+      <Link href="/signup" className="text-muted-foreground hover:text-foreground transition duration-400">Sign Up</Link>
       </div>
     </nav>
   )

@@ -18,17 +18,22 @@ class AnomalyDetector:
         self._train_models()
     
     def _preprocess_data(self, data):
+        # Konverter alle kolonnenavne til små bogstaver
         data.columns = data.columns.str.lower()
         
+        # Tjek for manglende nødvendige kolonner
         missing_cols = [col for col in self.expected_columns if col not in data.columns]
         if missing_cols:
-            raise ValueError(f"Missing required columns: {missing_cols}")
+            raise ValueError(f"Manglende nødvendige kolonner: {missing_cols}")
         
+        # Vælg kun de forventede kolonner og lav en kopi af dataene
         data_cleaned = data[self.expected_columns].copy()
         
+        # Konverter alle kolonner til numerisk, og tving fejl til NaN
         for col in data_cleaned.columns:
             data_cleaned[col] = pd.to_numeric(data_cleaned[col], errors='coerce')
         
+        # Udfyld eventuelle NaN-værdier med medianen af kolonnen
         data_cleaned.fillna(data_cleaned.median(), inplace=True)
         
         return data_cleaned

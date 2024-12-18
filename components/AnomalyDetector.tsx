@@ -92,7 +92,7 @@ export default function AnomalyDetector({ userId }: { userId: string }) {
     if (!isAnomaly) return null
     
     const explanations = {
-      'Isolation_Forest_Anomaly': 'This indicates that the data point is significantly different from the majority of the data, based on the Isolation Forest algorithm.',
+      'Isolation_Forest_Anomaly': 'This indicates that the data point is significantly different from the majority of the data.',
       'Distance_Based_Anomaly': 'This suggests that the data point is statistically distant from the average values in the dataset.'
     }
 
@@ -122,21 +122,21 @@ export default function AnomalyDetector({ userId }: { userId: string }) {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <FloatingLabelInput value={formData.length} onChange={handleInputChange} label="Length" id="length" name="length" />
+                <FloatingLabelInput value={formData.length} onChange={handleInputChange} label="Days Fasted" id="length" name="length" />
                 <div className="grid grid-cols-2 gap-4">
                   {(['weight', 'bmi', 'waist', 'pulse'] as const).map(metric => (
                     <div key={metric} className="space-y-2">
                       <FloatingLabelInput 
                         value={formData[`${metric}pre` as keyof FormData]} 
                         onChange={handleInputChange} 
-                        label={`${metric.charAt(0).toUpperCase() + metric.slice(1)} Pre`} 
+                        label={`${metric.charAt(0).toUpperCase() + metric.slice(1)} Pre Fast`} 
                         id={`${metric}pre`} 
                         name={`${metric}pre`} 
                       />
                       <FloatingLabelInput 
                         value={formData[`${metric}post` as keyof FormData]} 
                         onChange={handleInputChange} 
-                        label={`${metric.charAt(0).toUpperCase() + metric.slice(1)} Post`} 
+                        label={`${metric.charAt(0).toUpperCase() + metric.slice(1)} Now`} 
                         id={`${metric}post`} 
                         name={`${metric}post`} 
                       />

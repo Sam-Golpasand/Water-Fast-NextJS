@@ -70,7 +70,7 @@ export default function SignupPage() {
 
         console.log('Signup response:', data);
       } else {
-        toast.success('Signup successful! Please check your email to confirm your account.', {
+        toast.success('Signup successful!', {
           position: "bottom-right",
           autoClose: 4000,
           hideProgressBar: true,
@@ -81,6 +81,7 @@ export default function SignupPage() {
           theme: "dark",
           transition: Zoom,
         });
+        router.replace('/login');
       }
     } catch (error) {
       console.error('Detailed signup error:', error);
