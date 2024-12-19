@@ -73,14 +73,14 @@ export default function LoginPage() {
     <div className="flex min-h-screen bg-background text-foreground">
       <div className="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 lg:px-8">
         <div className="w-full max-w-sm">
-          <h3 className='text-muted-foreground text-sm mb-4'>DIN DIGITALE ASSISTENT TIL DIN FASTE</h3>
-          <h2 className="text-3xl font-bold mb-6 text-left text-foreground">Log ind i din konto<span className='text-green-500'>.</span></h2>
-          <h3 className='text-muted-foreground text-sm my-4'>Mangler du en konto? <Link href="/signup" className='text-green-500'>Lav en her</Link></h3>
+          <h3 className='text-muted-foreground text-sm mb-4'>YOUR DIGITAL ASSISTANT FOR YOUR FAST</h3>
+          <h2 className="text-3xl font-bold mb-6 text-left text-foreground">Log in to your account<span className='text-green-500'>.</span></h2>
+          <h3 className='text-muted-foreground text-sm my-4'>Don't have an account? <Link href="/signup" className='text-green-500'>Create one here</Link></h3>
           <form className="space-y-6" onSubmit={login}>
             <FloatingLabelInput value={email} onChange={(e: any) => setEmail(e.target.value)} label="Email" id="email"/>
             <FloatingLabelInput value={password} onChange={(e: any) => setPassword(e.target.value)} label="Password" id="password"/>
             <Button type="submit" className="w-full h-12 rounded-full bg-blue-500 hover:bg-blue-600 text-white">
-              Log ind
+              Log in
             </Button>
           </form>
         </div>
